@@ -12,6 +12,25 @@ def main_page():
                 test_stats(),
                 dbc.Row([
                     dbc.Col([
+                                # html.Div(
+                                #     dbc.Accordion(
+                                #         [
+                                #             dbc.AccordionItem(
+                                #                 checklist_example(title="По состоянию на"),
+                                #                 title="Item 1",
+                                #             ),
+                                #             dbc.AccordionItem(
+                                #                 "This is the content of the second section",
+                                #                 title="Item 2",
+                                #             ),
+                                #             dbc.AccordionItem(
+                                #                 "This is the content of the third section",
+                                #                 title="Item 3",
+                                #             ),
+                                #         ],
+                                #         always_open=True,
+                                #     )
+                                # ),
                                 # dropdown_example("Первый", "Второй", "Третий", id='dropdown_period', placeholder="Период"),
                                 checklist_example(title="По состоянию на"),
                                 foo_checklist_example("Тип УВ", "hc-type", "Природный газ", "Газовый конденсат", "Нефть", "Газопродукт"),
@@ -41,9 +60,15 @@ def help_page():
     return html.Div([
         html.H1("Помощь"),
     ])
+from components import upload_data
+def upload_page():
+    return html.Div([
+        upload_data()
+    ])
 routes = {
     "/": main_page,
     "/help": help_page,
+    "/upload": upload_page
 }
 def render_page_content(pathname):
     if pathname in routes:
@@ -55,19 +80,23 @@ def render_page_content(pathname):
 app.layout = html.Div([
     
     dcc.Location(id='url', refresh=False),
-    navbar,  # Навбар
-    dcc.Loading(
-        id="loading-container",
-        children=[
-            html.Div(
+    navbar,
+    html.Div(
                 id="page-content",
                 children=[]  # Здесь будет ваш контент страницы
-            )
-        ],
-        type="circle",  # или "default", "cube", "dot", "graph", "circle"
-        color="#476f95",  # цвет загрузки
-        fullscreen=True  # показывать только на контенте страницы  лучше поставить False
-    )
+            )    # Навбар
+    # dcc.Loading(
+    #     id="loading-container",
+    #     children=[
+    #         html.Div(
+    #             id="page-content",
+    #             children=[]  # Здесь будет ваш контент страницы
+    #         )
+    #     ],
+    #     type="circle",  # или "default", "cube", "dot", "graph", "circle"
+    #     color="#476f95",  # цвет загрузки
+    #     fullscreen=True  # показывать только на контенте страницы  лучше поставить False
+    # )
     #удалить загрузку и оставить это
     # html.Div(id='page-content')
 ])
@@ -78,4 +107,4 @@ app.layout = html.Div([
 def display_page(pathname):
     return render_page_content(pathname)
 if __name__ == "__main__":
-    app.run_server(host="0.0.0.0", port=55510, debug=True)
+    app.run_server(host="0.0.0.0", port=55189, debug=True)
