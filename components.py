@@ -1,5 +1,5 @@
 import dash_bootstrap_components as dbc
-from dash import html, dcc
+from dash import html, dcc, Output, Input, callback, State
 import dash_mantine_components as dmc
 #навигация
 navbar = dbc.NavbarSimple(
@@ -12,6 +12,7 @@ navbar = dbc.NavbarSimple(
         dbc.NavItem(dbc.NavLink("Настройки", href="/settings")),
         dbc.NavItem(dbc.NavLink("Помощь", href="/help")),
         dbc.NavItem(dbc.NavLink("Чат в TrueConf", href="/trueconf")),
+        dbc.NavItem(dbc.NavLink("Загрузка данных", href="/upload")),
     ],
     brand="ПРОИЗВОДСТВО",
     className = "div-navbar"
@@ -172,4 +173,91 @@ def test_stats():
             # dbc.Col(html.H5("413 тыс.т", className="info-card"), className="stats-center"),
         ])
     ], className="stats-block")
-             
+# def upload_data():
+#     return dbc.Form(
+#         dbc.Row([
+#             dbc.Label("Тип новой записи", width="auto"),
+#             dbc.Col(
+#                 dbc.Input(placeholder="Enter email"),
+#                 className="me-3",
+#             ),
+#             dbc.Label("Название", width="auto"),
+#             dbc.Col(
+#                 dbc.Input(type="email", placeholder="Enter email"),
+#                 className="me-3",
+#             ),
+#             dbc.Col(dbc.Button("Подтвердить"), width="auto")
+#         ])
+#     )
+def upload_data():
+    return dbc.Form(
+        dbc.Row(
+            [
+                # dbc.Label("Тип новой записи", width="auto"),
+                dcc.Dropdown(
+                    id="operation-type",
+                    placeholder="Выберите",
+                    options=[
+                        {'label': 'Новая запись', 'value' : 'new'},
+                        {'label': 'Регулярное обновление', 'value' : 'update'}
+                    ],
+                    value='update'
+                ),       
+                html.Div(id='additional-fields'),
+                # dbc.Button('Подтвердить', id='submit-button', n_clicks=0),
+            ]
+        )
+    )
+@callback(
+    Output('additional-fields', 'children'),
+    Input('operation-type', 'value')
+)
+def update_fields(operation_type):
+    if operation_type == 'new':
+        return html.Div([
+            dcc.Dropdown(
+                id='data-type',
+                options=[
+                    {'label': 'Страна', 'value': 'country'},
+                    {'label': 'Флюид', 'value': 'fluid'}
+                ],
+                value='country'
+            ),
+            html.Div(id='input-field'),
+        ])
+    else:
+        return html.Div()  # For regular updates, we assume no additional fields for now
+@callback(
+    Output('input-field', 'children'),
+    Input('data-type', 'value')
+)
+def display_input_field(data_type):
+    # if data_type == 'country':
+    #     return dcc.Input(id='country-name', type='text', placeholder='Введите название страны')
+    # elif data_type == 'fluid':
+    #     return dcc.Input(id='fluid-name', type='text', placeholder='Введите название флюида')
+    # return html.Div()
+    layout = html.Div([
+        dcc.Input(id=f'{data_type}-name', type='text', placeholder=f'Введите название'),
+        dbc.Row([
+            dbc.Button('Подтвердить', id='submit-button', n_clicks=0),
+        ]),
+        html.Div(id='output-message')
+    ])
+    return layout
+@callback(
+    Output('output-message', 'children'),
+    Input('submit-button', 'n_clicks'),
+    State('operation-type', 'value'),
+    State('data-type', 'value'),
+    State('country-name', 'value'),
+    State('fluid-name', 'value')
+)
+def handle_submission(n_clicks, operation_type, data_type, country_name, fluid_name):
+    if n_clicks > 0:
+        if operation_type == 'new':
+            if data_type == 'country':
+                return f'Новая запись: страна - {country_name}'
+            elif data_type == 'fluid':
+                return f'Новая запись: флюид - {fluid_name}'
+    return ''
