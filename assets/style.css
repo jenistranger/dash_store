@@ -105,6 +105,14 @@ input[type=checkbox] {
     margin: 10px; */
     cursor: pointer;
 }
+.upload-form {
+    padding-right: 1rem;
+    padding-left: 1rem;
+    margin-top: 2rem;
+}
+.btn {
+    margin-right: 3rem;
+}
 /* div {
     border: 1px solid black;
 } */
