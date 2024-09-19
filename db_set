@@ -1,0 +1,166 @@
+
+CREATE SCHEMA public AUTHORIZATION postgres;
+
+
+CREATE TABLE common_plans (
+	plan_guid varchar(40) NOT NULL,
+	plan_year date NULL,
+	asset_guid varchar(40) NULL,
+	fluid_guid varchar(40) NULL,
+	volume float8 NULL,
+	part float8 NULL,
+	"isChanges" bool NULL,
+	change_num int4 DEFAULT 0 NULL,
+	CONSTRAINT common_plans_pkey PRIMARY KEY (plan_guid),
+	CONSTRAINT unique_plan UNIQUE (plan_year, asset_guid, "isChanges", change_num)
+);
+
+
+
+
+CREATE TABLE countries (
+	country_guid varchar(40) NOT NULL,
+	country_name text NOT NULL,
+	CONSTRAINT countries_pkey PRIMARY KEY (country_guid)
+);
+
+
+
+CREATE TABLE current_status (
+	status_guid varchar(40) NOT NULL,
+	status_name varchar(20) NOT NULL,
+	CONSTRAINT current_status_pkey PRIMARY KEY (status_guid)
+);
+
+
+
+CREATE TABLE event_types (
+	event_type_guid varchar(40) NOT NULL,
+	event_name varchar(11) NOT NULL,
+	CONSTRAINT event_types_pkey PRIMARY KEY (event_type_guid)
+);
+
+
+
+
+CREATE TABLE fluids (
+	fluid_guid varchar(40) NOT NULL,
+	fluid_name varchar(30) NOT NULL,
+	CONSTRAINT fluids_pkey PRIMARY KEY (fluid_guid)
+);
+
+
+
+CREATE TABLE infos (
+	info_type_guid varchar(40) NOT NULL,
+	info_name varchar(8) NOT NULL,
+	CONSTRAINT infos_pkey PRIMARY KEY (info_type_guid)
+);
+
+
+
+CREATE TABLE periods (
+	period_type_guid varchar(40) NOT NULL,
+	period_name varchar(10) NOT NULL,
+	CONSTRAINT periods_pkey PRIMARY KEY (period_type_guid)
+);
+
+
+CREATE TABLE units (
+	unit_guid varchar(40) NOT NULL,
+	unit_name varchar(20) NOT NULL,
+	CONSTRAINT units_pkey PRIMARY KEY (unit_guid)
+);
+
+
+
+CREATE TABLE assets (
+	asset_guid varchar(40) NOT NULL,
+	asset_name varchar(50) NOT NULL,
+	country_guid varchar(40) NULL,
+	total_wells int4 NULL,
+	CONSTRAINT assets_pkey PRIMARY KEY (asset_guid),
+	CONSTRAINT fk_country_guid FOREIGN KEY (country_guid) REFERENCES countries(country_guid)
+);
+
+
+
+CREATE TABLE doc_links (
+	doc_guid varchar(40) NOT NULL,
+	plan_year date NOT NULL,
+	asset_guid varchar(40) NOT NULL,
+	"isChanges" bool NULL,
+	change_num int4 DEFAULT 0 NULL,
+	link text NULL,
+	CONSTRAINT doc_links_pkey PRIMARY KEY (doc_guid),
+	CONSTRAINT fk_plan_reference FOREIGN KEY (plan_year,asset_guid,"isChanges",change_num) REFERENCES common_plans(plan_year,asset_guid,"isChanges",change_num)
+);
+CREATE UNIQUE INDEX unique_doc_link ON public.doc_links USING btree (plan_year, asset_guid, "isChanges", change_num);
+
+
+CREATE TABLE percent_part (
+	pp_guid varchar(40) NOT NULL,
+	c_date date NULL,
+	period_type_guid varchar(40) NULL,
+	"percent" float8 NULL,
+	asset_guid varchar(40) NULL,
+	CONSTRAINT percent_part_pkey PRIMARY KEY (pp_guid),
+	CONSTRAINT fk_asset_guid_percent FOREIGN KEY (asset_guid) REFERENCES assets(asset_guid),
+	CONSTRAINT fk_period_type_percent FOREIGN KEY (period_type_guid) REFERENCES periods(period_type_guid)
+);
+
+
+CREATE TABLE wells (
+	well_guid varchar(40) NOT NULL,
+	well_name varchar(50) NOT NULL,
+	status_guid varchar(40) NULL,
+	asset_guid varchar(40) NULL,
+	period_type_guid varchar(40) NULL,
+	c_date date NULL,
+	work_duration timestamp NULL,
+	CONSTRAINT wells_pkey PRIMARY KEY (well_guid),
+	CONSTRAINT fk_asset_guid FOREIGN KEY (asset_guid) REFERENCES assets(asset_guid),
+	CONSTRAINT fk_period_type_guid FOREIGN KEY (period_type_guid) REFERENCES periods(period_type_guid),
+	CONSTRAINT fk_status_guid FOREIGN KEY (status_guid) REFERENCES current_status(status_guid)
+);
+
+
+CREATE TABLE commercial_data (
+	"_guid" varchar(40) NOT NULL,
+	c_date date NOT NULL,
+	period_type_guid varchar(40) NULL,
+	asset_guid varchar(40) NULL,
+	well_guid varchar(40) NULL,
+	"_location" varchar(255) NULL,
+	fluid_guid varchar(40) NULL,
+	"_value" float8 NULL,
+	unit_guid varchar(40) NULL,
+	license varchar(255) NULL,
+	info_type_guid varchar(40) NULL,
+	CONSTRAINT commercial_data_pkey PRIMARY KEY (_guid),
+	CONSTRAINT fk_asset_guid FOREIGN KEY (asset_guid) REFERENCES assets(asset_guid),
+	CONSTRAINT fk_fluid_guid FOREIGN KEY (fluid_guid) REFERENCES fluids(fluid_guid),
+	CONSTRAINT fk_info_type_guid FOREIGN KEY (info_type_guid) REFERENCES infos(info_type_guid),
+	CONSTRAINT fk_period_type_guid FOREIGN KEY (period_type_guid) REFERENCES periods(period_type_guid),
+	CONSTRAINT fk_unit_guid FOREIGN KEY (unit_guid) REFERENCES units(unit_guid),
+	CONSTRAINT fk_well_guid FOREIGN KEY (well_guid) REFERENCES wells(well_guid)
+);
+
+
+CREATE TABLE events (
+	event_guid varchar(40) NOT NULL,
+	event_type_guid varchar(40) NULL,
+	start_at timestamp NULL,
+	end_at timestamp NULL,
+	asset_guid varchar(40) NULL,
+	well_guid varchar(40) NULL,
+	duration interval NULL,
+	"isStoped" bool NULL,
+	event_description text NULL,
+	event_status text NULL,
+	reason text NULL,
+	CONSTRAINT events_pkey PRIMARY KEY (event_guid),
+	CONSTRAINT fk_asset_guid_event FOREIGN KEY (asset_guid) REFERENCES assets(asset_guid),
+	CONSTRAINT fk_event_type_guid FOREIGN KEY (event_type_guid) REFERENCES event_types(event_type_guid),
+	CONSTRAINT fk_well_guid_event FOREIGN KEY (well_guid) REFERENCES wells(well_guid)
+);
