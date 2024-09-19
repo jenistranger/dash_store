@@ -3,50 +3,66 @@
     width: 100%;
     max-width: none;
 }
+
 .navbar-light .navbar-nav .nav-link {
     color: rgba(0, 0, 0, 1);
     border: 1px solid;
     border-radius: 20rem;
     margin-right: 1rem;
+
 }
+
 .navbar-light .navbar-nav .nav-link:hover {
     background-color: black;
-    color: white;         }
+    color: white;         
+}
+
+
+
 /*Стата - изменить если добавить ещё блоков*/
 .stats-block {
     border-bottom: 1px solid black;
     margin-bottom: 1rem;
     padding-left: 30%;
     padding-right: 12%;
+
 }
+
 .stats-center col{
     display: flex;
     justify-content: flex-end;
     align-items:end;
 }
+
+
 .info-card {
     margin-bottom: 1rem;
     border-radius: 1rem;
     padding: 1rem;
     background: rgba(113, 145, 167, 0.301);
 }
+
 .navbar-expand-md .navbar-collapse {
     border-bottom: 1px solid black;
     /* margin-bottom: 1rem; */
     padding-bottom: 1rem;
 }
+
 .navbar-brand {
     border-left: 10px solid black;
     padding-left: 1rem;
     padding-right: 5rem;
     font-weight: bold;
 }
+
 .filters-border input {
     margin-right: 1rem;
 }
+
 .filters-border h5 {
     margin-bottom: 0.75rem;
 }
+
 .filters-border {
     /* color: rgba(0, 0, 0, 1); */
     border: 1px solid black;
@@ -58,6 +74,7 @@
     /* border-radius: 20rem;
     margin-right: 1rem; */
 }
+
 /* CSS */
 .button-28 {
     width: 80%;
@@ -87,32 +104,67 @@
     /* width: 89%; */
     will-change: transform;
 }
+
 .button-28:disabled {
   pointer-events: none;
 }
+
 .button-28:hover {
   color: #fff;
   background-color: #1A1A1A;
   box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
   transform: translateY(-2px);
 }
+
 .button-28:active {
   box-shadow: none;
   transform: translateY(0);
 }
+
+
 input[type=checkbox] {
     /* transform: scale(2);
     margin: 10px; */
     cursor: pointer;
 }
-.upload-form {
-    padding-right: 1rem;
-    padding-left: 1rem;
-    margin-top: 2rem;
+
+.centeredUplod {
+    margin: auto;
+    width: 30%;
+    
 }
-.btn {
-    margin-right: 3rem;
+
+.centeredUplod .btn {
+    margin-top: 1rem;
 }
-/* div {
-    border: 1px solid black;
-} */
+
+.centeredUplod .form-label {
+    margin-top: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+.alert {
+    margin-top: 1rem;
+}
+
+#year-dropdown {
+    margin: 0.5rem;
+    /* margin-bottom: 3rem; */
+    /* margin-bottom: 0.1rem; */
+    padding: 1rem;
+    width: 80%;
+}
+
+#month-dropdown {
+    /* margin-top: 0.1rem; */
+    margin: 0.5rem;
+    margin-bottom: 3rem;
+    /* margin-bottom: 0.1rem; */
+    padding: 1rem;
+    width: 80%;
+}
+
+#date-picker-input {
+    margin-top:2rem;
+    margin-bottom:2rem;
+}
