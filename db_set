@@ -164,3 +164,31 @@ CREATE TABLE events (
 	CONSTRAINT fk_event_type_guid FOREIGN KEY (event_type_guid) REFERENCES event_types(event_type_guid),
 	CONSTRAINT fk_well_guid_event FOREIGN KEY (well_guid) REFERENCES wells(well_guid)
 );
+
+
+import random
+from datetime import date, timedelta, datetime
+
+
+
+
+# if __name__ == "__main__":
+#     for item in range(start, end):
+#         print(item)
+
+
+def daterange(start_date: date, end_date: date):
+    days = int((end_date - start_date).days)
+    for n in range(days+1):
+        yield start_date + timedelta(n)
+
+
+if __name__ == "__main__":
+    start = date(2020, 1, 1)
+    end = datetime.date(datetime.now())
+    for single_date in daterange(start, end):
+        metric = random.randrange(1, 100, 1)
+
+        print(f"{single_date.strftime('%Y-%m-%d')} - {metric}") 
+
+
