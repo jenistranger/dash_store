@@ -7,7 +7,7 @@ from flask import Flask
 
 from components import test_graphs, navbar, test_stats, test_waterfall, radio_period, button_example, hc_checklist, radio_units, assets_checklist
 
-app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_callback_exceptions=True)
+app = Dash(server=Flask(__name__), external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_callback_exceptions=True)
 
 app.title = "Производство"
 
@@ -108,22 +108,12 @@ app.layout = html.Div([
     html.Div(
                 id="page-content",
                 children=[]  # Здесь будет ваш контент страницы
-            )    # Навбар
-    # dcc.Loading(
-    #     id="loading-container",
-    #     children=[
-    #         html.Div(
-    #             id="page-content",
-    #             children=[]  # Здесь будет ваш контент страницы
-    #         )
-    #     ],
-    #     type="circle",  # или "default", "cube", "dot", "graph", "circle"
-    #     color="#476f95",  # цвет загрузки
-    #     fullscreen=True  # показывать только на контенте страницы  лучше поставить False
-    # )
+            ),
 
-    #удалить загрузку и оставить это
-    # html.Div(id='page-content')
+    html.Footer([
+        html.Div(id="props_test"),
+        html.Div(id="props_test_2"),
+    ])
 ])
 
 @app.callback(
@@ -136,4 +126,4 @@ def display_page(pathname):
 
 
 if __name__ == "__main__":
-    app.run_server(host="0.0.0.0", port=53180, debug=True) 
+    app.run_server(host="0.0.0.0", port=53999, debug=True) 
