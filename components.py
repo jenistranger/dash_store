@@ -1,5 +1,5 @@
 import dash_bootstrap_components as dbc
-from dash import html, dcc, Output, Input, callback, State
+from dash import html, dcc, Output, Input, callback, State, callback_context
 import dash_mantine_components as dmc
 
 
@@ -63,8 +63,13 @@ def radio_period(title):
                 # html.Div(id='output-container', children=''),
             ], className="filters-border")
 
+
+
 from datetime import datetime, date
 
+
+
+#загружать в датастор ласт дату
 @callback(
         Output("date_picker", "children"),
         Input("radio_period", "value")
@@ -75,7 +80,7 @@ def date_pick(value):
         return html.Div([
                     dcc.Dropdown(
                         id='year-dropdown',
-                        options=[{'label': str(year), 'value': year} for year in range(2018, current_year+1)],
+                        options=[{'label': str(year), 'value': year} for year in range(2020, current_year+1)],
                         placeholder="Выберите год"
                     )
                 ])
@@ -83,8 +88,8 @@ def date_pick(value):
         return html.Div([
 
                         dcc.Dropdown(
-                            id='year-dropdown',
-                            options=[{'label': str(year), 'value': year} for year in range(2018, current_year + 1)],
+                            id='year-dropdown-m',
+                            options=[{'label': str(year), 'value': year} for year in range(2020, current_year + 1)],
                             placeholder="Выберите год",
                             value=current_year
                         ),
@@ -111,7 +116,43 @@ def date_pick(value):
     elif value=='day':
         return html.Div(
             [
-                 #Тут дейт пикер 
+                dcc.DatePickerSingle(
+                        id='date-picker-single',
+                        min_date_allowed=date(2020, 1, 1),
+                        max_date_allowed=datetime.now(),
+                        initial_visible_month=datetime.now(),
+                        month_format='D, MMMM, YYYY',
+                        display_format='D.M.YYYY/Q',
+                        date=datetime.now(),
+                        clearable=True,
+                        with_portal=True,
+                        placeholder="День"
+                    ),
+            ],
+            className="current-date-picker"
+        )
+    elif value=='quarter':
+        return html.Div(
+            [
+
+                dcc.Dropdown(
+                            id='year-dropdown-q',
+                            options=[{'label': str(year), 'value': year} for year in range(2020, current_year + 1)],
+                            placeholder="Выберите год",
+                            value=current_year
+                        ),
+                        dcc.Dropdown(
+                            id='quarter-dropdown',
+                            options=[
+                                {'label': 'Первый', 'value': 'qua-1'},
+                                {'label': 'Второй', 'value': 'qua-2'},
+                                {'label': 'Третий', 'value': 'qua-3'},
+                                {'label': 'Четвертый', 'value': 'qua-4'},
+                            ],
+                            placeholder="Выберите квартал",
+                            # value=datetime.now().month  # По умолчанию текущий месяц
+                        )
+
             ]
         )
 
@@ -130,28 +171,52 @@ def hc_checklist(title):
                         {'label': 'Газовый конденсат', "value" : 'condensate_gas'},
                         {'label': 'Нефть', "value" : 'oil'},
                         {'label': 'Газопродукты', "value" : 'product_gas'},
-                    ]
+                    ],
+                    value=['oil'],
                 ),
                 # html.Div(id=f'output-container-{id}', children=''),
             ], className='filters-border')
 
 
+
+options_assets= ['Ипати Акио', 'Блоки 05-2/05-3', 'Шахпахты', 'ВИНЗ']
 #тут надо подгружать данные из БД
 def assets_checklist(title):
     return html.Div([
                 html.H5(f"{title}"),
+                dcc.Checklist(["Все"], [], id="all-checklist"),
                 dcc.Checklist(
+                    options_assets,
+                    [],
                     id="assets-checklist",
-                    options=[
-                        {'label': 'ВСЕ', "value" : 'all'},
-                        {'label': 'Ипати Акио', "value" : 'asset_1'},
-                        {'label': 'Блоки 05-2/05-3', "value" : 'asset_2'},
-                        {'label': 'Шахпахты', "value" : 'asset_3'},
-                        {'label': 'ВИНЗ', "value" : 'asset_4'},
-                    ]
+                    # options= options_assets
+                    
+                    # [
+                    #     # {'label': 'ВСЕ', "value" : 'all'},
+                    #     {'label': 'Ипати Акио', "value" : 'asset_1'},
+                    #     {'label': 'Блоки 05-2/05-3', "value" : 'asset_2'},
+                    #     {'label': 'Шахпахты', "value" : 'asset_3'},
+                    #     {'label': 'ВИНЗ', "value" : 'asset_4'},
+                    # ]
                 ),
                 # html.Div(id=f'output-container-{id}', children=''),
             ], className='filters-border')
+
+
+@callback(
+    Output("assets-checklist", "value"),
+    Output("all-checklist", "value"),
+    Input("assets-checklist", "value"),
+    Input("all-checklist", "value"),
+)
+def sync_checklists(assets_checklist, all_selected):
+    ctx = callback_context
+    input_id = ctx.triggered[0]["prop_id"].split(".")[0]
+    if input_id == "assets-checklist":
+        all_selected = ["Все"] if set(assets_checklist) == set(options_assets) else []
+    else:
+        assets_checklist = options_assets if all_selected else []
+    return assets_checklist, all_selected
 
 def radio_units(title):
     return html.Div([
@@ -169,6 +234,28 @@ def radio_units(title):
                 ),
                 # html.Div(id='output-container', children=''),
             ], className="filters-border")
+
+
+
+#просто тест
+@callback(
+        Output('props_test', 'children'),
+        Input('hc-checklist', 'value'),
+        Input('assets-checklist', 'value'),
+        Input('radio_units', 'value'),
+        Input('radio_period', 'value'),
+
+)
+def print_filters(hc, assets, units, period):
+    return html.P(f"{hc} - {assets} - {units} - {period}")
+
+
+
+#Получение данных о дате
+
+
+
+
 
 
 
@@ -204,15 +291,15 @@ def test_waterfall(name):
 def test_stats():
     return html.Div([
         dbc.Row([
-            
+
             dbc.Col([
                 html.Div([
                     html.H6("Газ (млн. м3)"),
                     html.H5("300"),
                     dmc.Badge("Месяц: +15%", color="green")
                 ], className="info-card")
-    
             ], className="stats-center"),
+
             dbc.Col([
                 html.Div([
                     html.H6("Конденсат (тыс. т)"),
@@ -220,6 +307,7 @@ def test_stats():
                     dmc.Badge("Месяц: +23%", color="green")
                 ], className="info-card")
             ], className="stats-center"),
+
             dbc.Col([
                 html.Div([
                     html.H6("Нефть (тыс.т)"),
@@ -227,6 +315,7 @@ def test_stats():
                     dmc.Badge("Месяц: -5%", color="red")
                 ], className="info-card")
             ], className="stats-center"),
+
             dbc.Col([
                 html.Div([
                     html.H6("Коэффициент эксплуатации"),
@@ -235,13 +324,60 @@ def test_stats():
                 ], className="info-card")
             ], className="stats-center"),
 
+            # dbc.Col([
 
+            #     html.Div([
 
-            # dbc.Col(html.H5("133 млн.м3", className="info-card"), className="stats-center"),
-            # dbc.Col(html.H5("455 тыс.т", className="info-card"), className="stats-center"),
-            # dbc.Col(html.H5("413 тыс.т", className="info-card"), className="stats-center"),
-        ])
-    ], className="stats-block")
+            #         html.H6("Фонд скважин"),
+            #         html.H5("73%"),
+            #         dbc.Row(
+            #             [
+            #                 dbc.Col(
+            #                     [
+            #                         html.P("Общий"),
+            #                         html.P('16')
+            #                     ]
+            #                 ),
+            #                 dbc.Col(
+            #                     [
+            #                         html.P("Действующий"),
+            #                         html.P('15')
+            #                     ]
+            #                 ),  
+            #                 dbc.Col(
+            #                     [
+            #                         html.P("В работе"),
+            #                         html.P('10')
+            #                     ]
+            #                 ),
+            #             ])
+            #         ], className="info-card"),
+                    
+            # dbc.Col([
+            #     html.Div([
+            #         html.H6("Ключевые события"),
+            #         html.H5("7"),
+            #         dbc.Row(
+            #             [
+            #                 dbc.Col(
+            #                     [
+            #                         html.P("Плановое"),
+            #                         html.P('16')
+            #                     ]
+            #                 ),
+            #                 dbc.Col(
+            #                     [
+            #                         html.P("Внеплановое"),
+            #                         html.P('15')
+            #                     ]
+            #                 ), 
+            #             ]
+            #         ),
+            #     ], className="info-card")
+            # ], className="stats-center"),
+            # ])
+        ], className="stats-block" ) 
+        ])# className="stats-block")
 
 # def upload_data():
 #     return dbc.Form(
@@ -345,7 +481,7 @@ def upload_data():
             {"label": "Регулярное обнволение", "value": "upd"},
             {"label": "Новая запись", "value": "new"},
         ],
-        value="Регулярное обнволение"
+        placeholder="..."
     )
 
     layout = html.Div(
@@ -358,6 +494,22 @@ def upload_data():
     
     return layout 
 
+
+# def testing_inputGroup():
+#     dropdown_menu_items = [
+#     dbc.DropdownMenuItem("Страна", id="dropdown-menu-country"),
+#     dbc.DropdownMenuItem("Флюид", id="dropdown-menu-fluid"),
+#     # dbc.DropdownMenuItem(divider=True),
+#     # dbc.DropdownMenuItem("Clear", id="dropdown-menu-item-clear"),
+#     ]
+
+#     input_group = dbc.InputGroup(
+#         [
+#             dbc.DropdownMenu(dropdown_menu_items, label="Generate"),
+#             dbc.Input(id="input-group-dropdown-input", placeholder="name"),
+#         ]
+#     )
+#     return
 
 
 @callback(
@@ -382,8 +534,101 @@ def config_selector(select_type):
             ]
         )
         return layout
-    else:
-        return ''
+    elif select_type == "upd":
+        return html.Div([
+                    dbc.Row([
+                        dbc.Col(
+                            [
+                                dbc.Label("Период"),
+                                dbc.Select(
+                                        id="select_period",
+                                        options=[
+                                            {"label": "День", "value": "day"},
+                                            {"label": "Месяц", "value": "month"},
+                                            {"label": "Квартал", "value": "quarter"},
+                                            {"label": "Год", "value": "year"},
+                                        ],
+                                    )
+                            ]
+                        ),
+                        dbc.Col(
+                            [
+                                dbc.Label("Дата"),
+                                dbc.Input(id="name_input", placeholder="...", type="text"),
+                            ]
+                        ),
+                        dbc.Col(
+                            [
+                                 dbc.Label("Актив"),
+                                 dbc.Input(id="name_input", placeholder="...", type="text"),
+                            ]
+                        ),
+                        dbc.Col(
+                            [
+                                 dbc.Label("Скважина"),
+                                 dbc.Input(id="name_input", placeholder="...", type="text"),
+                            ]
+                        ),
+                        dbc.Col(
+                            [
+                                 dbc.Label("Месторождение"),
+                                 dbc.Input(id="name_input", placeholder="...", type="text"),
+                            ]
+                        ),
+                        dbc.Col(
+                            [
+                                 dbc.Label("Флюид"),
+                                dbc.Select(
+                                            id="hc-select",
+                                            options=[
+                                                {'label': 'Природный газ', "value" : 'nat_gas'},
+                                                {'label': 'Газовый конденсат', "value" : 'condensate_gas'},
+                                                {'label': 'Нефть', "value" : 'oil'},
+                                                {'label': 'Газопродукты', "value" : 'product_gas'},
+                                            ],
+                                        ),
+                            ]
+                        ),
+                        dbc.Col(
+                            [
+                                 dbc.Label("Объем"),
+                                 dbc.Input(id="name_input", placeholder="...", type="text"),
+                            ]
+                        ),
+                        dbc.Col(
+                            [
+                                dbc.Label("ЕИ"),
+                                dbc.Select(
+                                        id='Select_units',
+                                        options=[
+                                            {'label': 'млн.м3', 'value': 'mil_m3'},
+                                            {'label': 'млн.фут', 'value': 'mil_pounds'},
+                                            {'label': 'тыс.т', 'value': 'tho_tons'},
+                                            {'label': 'тыс.барр.', 'value': 'tho_bars'},
+                                            {'label': 'млн.тут', 'value': 'mil_tut'},
+                                        ])
+                            ]
+                        ),
+                        dbc.Col(
+                            [
+                                 dbc.Label("Лицензия"),
+                                 dbc.Input(id="name_input", placeholder="...", type="text"),
+                            ]
+                        ),
+                        dbc.Col(
+                            [
+                                 dbc.Label("План/Факт"),
+                                 dbc.Select(
+                                        id='Select_units',
+                                        options=[
+                                            {'label': 'Планированная', 'value': 'plan'},
+                                            {'label': 'Фактическая', 'value': 'fact'},
+
+                                        ])
+                            ]
+                        ),
+                    ])
+                ], className="moreSpaceUpload")
     
 
 from db_main import load_countries
@@ -423,3 +668,5 @@ def add_new_country(n_clicks, value):
                 return dbc.Alert("Данная запись уже есть в базе.", color="danger"),
     
         return dbc.Alert("Данные успешно добавлены", color="success"),
+
+
