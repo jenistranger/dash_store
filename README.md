@@ -48,3 +48,7 @@ ALTER TABLE public.about_wells ADD CONSTRAINT fk_period_type_guid FOREIGN KEY (p
 
 Сделать sql запрос на вывод минимальных и максимальных данных за период. 
 Учесть - период (столбец), ЕИ, флюид, актив	
+
+
+---------
+Добавить Store - Flask или Dash
