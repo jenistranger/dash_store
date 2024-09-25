@@ -52,3 +52,30 @@ ALTER TABLE public.about_wells ADD CONSTRAINT fk_period_type_guid FOREIGN KEY (p
 
 ---------
 Добавить Store - Flask или Dash
+- XlsxWriter                3.0.9
+- SQLAlchemy                2.0.29
+- Flask                     2.2.2
+Flask-APScheduler         1.12.4
+Flask-Caching             2.0.1
+Flask-Compress            1.12
+Flask-Cors                3.0.10
+Flask-Login               0.6.3
+Flask-SeaSurf             1.1.1
+Flask-Session             0.4.0
+Flask-SQLAlchemy          3.0.3
+dash                      2.15.0
+dash-ag-grid              31.0.1
+dash-auth                 1.4.1
+dash-bootstrap-components 1.2.1
+dash-core-components      2.0.0
+dash-html-components      2.0.0
+dash_mantine_components   0.12.1
+dash-pivottable           0.0.2
+dash-table                5.0.0
+altgraph                  0.17.3
+pandas                    1.4.4
+numpy                     1.23.3
+plotly                    5.22.0
+plotly-geo                1.0.0
+plotly-resampler          0.10.0
+matplotlib                3.7.0
