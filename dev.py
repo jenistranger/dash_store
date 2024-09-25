@@ -232,8 +232,10 @@ def quarter_commercial_data():
 def year_commercial_data():
     pass
 
-def test_date():
-    pass 
+#для plan day
+def get_plan_volume():
+
+    pass
 
 if __name__ == "__main__":
     start = date(2023, 5, 1)
