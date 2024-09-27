@@ -1,194 +1,185 @@
-
-CREATE SCHEMA public AUTHORIZATION postgres;
-
-
-CREATE TABLE common_plans (
-	plan_guid varchar(40) NOT NULL,
-	plan_year date NULL,
-	asset_guid varchar(40) NULL,
-	fluid_guid varchar(40) NULL,
-	volume float8 NULL,
-	part float8 NULL,
-	"isChanges" bool NULL,
-	change_num int4 DEFAULT 0 NULL,
-	CONSTRAINT common_plans_pkey PRIMARY KEY (plan_guid),
-	CONSTRAINT unique_plan UNIQUE (plan_year, asset_guid, "isChanges", change_num)
+CREATE table if not exists commercial_data (
+    id SERIAL NOT NULL,
+    h_date DATE NOT NULL,
+    period_type VARCHAR(50) NOT NULL,
+    project_id INT NOT NULL,
+    value numeric(23, 12), 
+    unit_id INT,
+    hydrocarbon_id INT,
+    comment TEXT,
+    old_project_id INT,
+    old_value numeric(23, 12), 
+    old_unit_id int,
+    old_hydrocarbon_id int,
+    old_comment TEXT,
+    CONSTRAINT pk_commercial_data PRIMARY KEY (id),
+    CONSTRAINT fk_commercial_data_project_id FOREIGN KEY (project_id) REFERENCES projects(project_id),
+    CONSTRAINT fk_commercial_data_old_project_id FOREIGN KEY (old_project_id) REFERENCES projects(project_id),
+    CONSTRAINT fk_commercial_data_unit_id FOREIGN KEY (unit_id) REFERENCES units(unit_id),
+    CONSTRAINT fk_commercial_data_old_unit_id FOREIGN KEY (old_unit_id) REFERENCES units(unit_id),
+    CONSTRAINT fk_commercial_data_hydrocarbon_id FOREIGN KEY (hydrocarbon_id) REFERENCES hydrocarbons(hydrocarbon_id),
+    CONSTRAINT fk_commercial_data_old_hydrocarbon_id FOREIGN KEY (old_hydrocarbon_id) REFERENCES hydrocarbons(hydrocarbon_id)
 );
 
 
 
-
-CREATE TABLE countries (
-	country_guid varchar(40) NOT NULL,
-	country_name text NOT NULL,
-	CONSTRAINT countries_pkey PRIMARY KEY (country_guid)
+CREATE table if not exists commercial_data_plan (
+    id SERIAL NOT NULL,
+    h_date DATE NOT NULL,
+    period_type VARCHAR(50) NOT NULL,
+    project_id INT NOT NULL,
+    value numeric(23, 12), 
+    unit_id INT,
+    hydrocarbon_id INT,
+    comment TEXT,
+    old_project_id INT,
+    old_value numeric(23, 12), 
+    old_unit_id int,
+    old_hydrocarbon_id int,
+    old_comment TEXT,
+    CONSTRAINT pk_commercial_data_plan PRIMARY KEY (id),
+    CONSTRAINT fk_commercial_data_plan_project_id FOREIGN KEY (project_id) REFERENCES projects(project_id),
+    CONSTRAINT fk_commercial_data_plan_old_project_id FOREIGN KEY (old_project_id) REFERENCES projects(project_id),
+    CONSTRAINT fk_commercial_data_plan_unit_id FOREIGN KEY (unit_id) REFERENCES units(unit_id),
+    CONSTRAINT fk_commercial_data_plan_old_unit_id FOREIGN KEY (old_unit_id) REFERENCES units(unit_id),
+    CONSTRAINT fk_commercial_data_plan_hydrocarbon_id FOREIGN KEY (hydrocarbon_id) REFERENCES hydrocarbons(hydrocarbon_id),
+    CONSTRAINT fk_commercial_data_plan_old_hydrocarbon_id FOREIGN KEY (old_hydrocarbon_id) REFERENCES hydrocarbons(hydrocarbon_id)
 );
 
 
 
-CREATE TABLE current_status (
-	status_guid varchar(40) NOT NULL,
-	status_name varchar(20) NOT NULL,
-	CONSTRAINT current_status_pkey PRIMARY KEY (status_guid)
+CREATE table if not exists commercial_data_nomination (
+    id SERIAL NOT NULL,
+    h_date DATE NOT NULL,
+    period_type VARCHAR(50) NOT NULL,
+    project_id INT NOT NULL,
+    value numeric(23, 12), 
+    unit_id INT,
+    hydrocarbon_id INT,
+    comment TEXT,
+    old_project_id INT,
+    old_value numeric(23, 12), 
+    old_unit_id int,
+    old_hydrocarbon_id int,
+    old_comment TEXT,
+    CONSTRAINT pk_commercial_data_nomination PRIMARY KEY (id),
+    CONSTRAINT fk_commercial_data_nomination_project_id FOREIGN KEY (project_id) REFERENCES projects(project_id),
+    CONSTRAINT fk_commercial_data_nomination_old_project_id FOREIGN KEY (old_project_id) REFERENCES projects(project_id),
+    CONSTRAINT fk_commercial_data_nomination_unit_id FOREIGN KEY (unit_id) REFERENCES units(unit_id),
+    CONSTRAINT fk_commercial_data_nomination_old_unit_id FOREIGN KEY (old_unit_id) REFERENCES units(unit_id),
+    CONSTRAINT fk_commercial_data_nomination_hydrocarbon_id FOREIGN KEY (hydrocarbon_id) REFERENCES hydrocarbons(hydrocarbon_id),
+    CONSTRAINT fk_commercial_data_nomination_old_hydrocarbon_id FOREIGN KEY (old_hydrocarbon_id) REFERENCES hydrocarbons(hydrocarbon_id)
 );
 
 
 
-CREATE TABLE event_types (
-	event_type_guid varchar(40) NOT NULL,
-	event_name varchar(11) NOT NULL,
-	CONSTRAINT event_types_pkey PRIMARY KEY (event_type_guid)
+CREATE TABLE if not exists consumption_data (
+    id SERIAL,
+    h_date DATE NOT NULL,
+    period_type VARCHAR(50),
+    burned_value numeric(23, 12),
+    fuel_value numeric(23, 12),
+    converted_value numeric(23, 12), 
+    hydrocarbon_id INT,
+    unit_id INT,
+    project_id INT,     
+    commentary text,
+    CONSTRAINT pk_consumption_data PRIMARY KEY (id),
+    CONSTRAINT fk_consumption_data_project_id FOREIGN KEY (project_id) REFERENCES projects(project_id),
+    CONSTRAINT fk_consumption_data_hydrocarbon_id FOREIGN KEY (hydrocarbon_id) REFERENCES hydrocarbons(hydrocarbon_id),
+    CONSTRAINT fk_consumption_data_unit_id FOREIGN KEY (unit_id) REFERENCES units(unit_id)
 );
 
 
-
-
-CREATE TABLE fluids (
-	fluid_guid varchar(40) NOT NULL,
-	fluid_name varchar(30) NOT NULL,
-	CONSTRAINT fluids_pkey PRIMARY KEY (fluid_guid)
+CREATE TABLE if not exists water_stats (
+    id SERIAL,
+    h_date DATE NOT NULL,
+    period_type VARCHAR(50) NOT NULL,
+    project_id INT NOT NULL,
+    injection_value numeric(23, 12),
+    util_value numeric(23, 12),
+    unit_id INT,
+    hydrocarbon_id INT,
+    commentary TEXT,
+    CONSTRAINT pk_water_stats PRIMARY KEY (id),
+    CONSTRAINT fk_water_stats_project_id FOREIGN KEY (project_id) REFERENCES projects(project_id),
+    CONSTRAINT fk_water_stats_hydrocarbon_id FOREIGN KEY (hydrocarbon_id) REFERENCES hydrocarbons(hydrocarbon_id),
+    CONSTRAINT fk_water_stats_unit_id FOREIGN KEY (unit_id) REFERENCES units(unit_id)
 );
 
 
-
-CREATE TABLE infos (
-	info_type_guid varchar(40) NOT NULL,
-	info_name varchar(8) NOT NULL,
-	CONSTRAINT infos_pkey PRIMARY KEY (info_type_guid)
+CREATE TABLE if not exists stock_of_wells (
+    id SERIAL,
+    h_date DATE NOT NULL,
+    period_type VARCHAR(50) NOT NULL,
+    project_id INT NOT NULL,
+    total INT,  
+    old_total INT,  
+    active INT,  
+    work INT,  
+    avg_duration INTERVAL,
+    commentary TEXT,
+    CONSTRAINT pk_stock_of_wells PRIMARY KEY (id),
+    CONSTRAINT fk_stock_of_wells_project_id FOREIGN KEY (project_id) REFERENCES projects(project_id)
 );
 
 
-
-CREATE TABLE periods (
-	period_type_guid varchar(40) NOT NULL,
-	period_name varchar(10) NOT NULL,
-	CONSTRAINT periods_pkey PRIMARY KEY (period_type_guid)
+CREATE TABLE if not exists pressure(
+    id SERIAL,
+    h_date DATE NOT NULL,
+    period_type VARCHAR(50) NOT NULL,
+    project_id INT NOT NULL,
+    total INT,  
+    old_total INT,  
+    active INT,  
+    work INT,  
+    avg_duration INTERVAL,
+    commentary TEXT,
+    CONSTRAINT pk_stock_of_wells PRIMARY KEY (id),
+    CONSTRAINT fk_stock_of_wells_project_id FOREIGN KEY (project_id) REFERENCES projects(project_id)
 );
 
+-- public.projects определение
+
+-- Drop table
+
+-- DROP TABLE projects;
+
+CREATE TABLE projects (
+	project_id serial4 NOT NULL,
+	project_name varchar(255) NOT NULL,
+	country_id serial4 NOT NULL,
+	CONSTRAINT projects_pkey PRIMARY KEY (project_id),
+	CONSTRAINT projects_project_name_key UNIQUE (project_name)
+);
+
+
+-- public.projects внешние включи
+
+ALTER TABLE public.projects ADD CONSTRAINT projects_country_id_fkey FOREIGN KEY (country_id) REFERENCES countries(country_id);
+
+
+-- public.units определение
+
+-- Drop table
+
+-- DROP TABLE units;
 
 CREATE TABLE units (
-	unit_guid varchar(40) NOT NULL,
-	unit_name varchar(20) NOT NULL,
-	CONSTRAINT units_pkey PRIMARY KEY (unit_guid)
+	unit_id serial4 NOT NULL,
+	unit_name varchar(60) NOT NULL,
+	unit_measurement varchar(20) DEFAULT 'volume'::character varying NOT NULL,
+	CONSTRAINT units_pkey PRIMARY KEY (unit_id)
 );
 
+-- public.hydrocarbons определение
 
+-- Drop table
 
-CREATE TABLE assets (
-	asset_guid varchar(40) NOT NULL,
-	asset_name varchar(50) NOT NULL,
-	country_guid varchar(40) NULL,
-	total_wells int4 NULL,
-	CONSTRAINT assets_pkey PRIMARY KEY (asset_guid),
-	CONSTRAINT fk_country_guid FOREIGN KEY (country_guid) REFERENCES countries(country_guid)
+-- DROP TABLE hydrocarbons;
+
+CREATE TABLE hydrocarbons (
+	hydrocarbon_id serial4 NOT NULL,
+	hydrocarbon_name varchar(255) NULL,
+	CONSTRAINT hydrocarbons_pkey PRIMARY KEY (hydrocarbon_id)
 );
-
-
-
-CREATE TABLE doc_links (
-	doc_guid varchar(40) NOT NULL,
-	plan_year date NOT NULL,
-	asset_guid varchar(40) NOT NULL,
-	"isChanges" bool NULL,
-	change_num int4 DEFAULT 0 NULL,
-	link text NULL,
-	CONSTRAINT doc_links_pkey PRIMARY KEY (doc_guid),
-	CONSTRAINT fk_plan_reference FOREIGN KEY (plan_year,asset_guid,"isChanges",change_num) REFERENCES common_plans(plan_year,asset_guid,"isChanges",change_num)
-);
-CREATE UNIQUE INDEX unique_doc_link ON public.doc_links USING btree (plan_year, asset_guid, "isChanges", change_num);
-
-
-CREATE TABLE percent_part (
-	pp_guid varchar(40) NOT NULL,
-	c_date date NULL,
-	period_type_guid varchar(40) NULL,
-	"percent" float8 NULL,
-	asset_guid varchar(40) NULL,
-	CONSTRAINT percent_part_pkey PRIMARY KEY (pp_guid),
-	CONSTRAINT fk_asset_guid_percent FOREIGN KEY (asset_guid) REFERENCES assets(asset_guid),
-	CONSTRAINT fk_period_type_percent FOREIGN KEY (period_type_guid) REFERENCES periods(period_type_guid)
-);
-
-
-CREATE TABLE wells (
-	well_guid varchar(40) NOT NULL,
-	well_name varchar(50) NOT NULL,
-	status_guid varchar(40) NULL,
-	asset_guid varchar(40) NULL,
-	period_type_guid varchar(40) NULL,
-	c_date date NULL,
-	work_duration timestamp NULL,
-	CONSTRAINT wells_pkey PRIMARY KEY (well_guid),
-	CONSTRAINT fk_asset_guid FOREIGN KEY (asset_guid) REFERENCES assets(asset_guid),
-	CONSTRAINT fk_period_type_guid FOREIGN KEY (period_type_guid) REFERENCES periods(period_type_guid),
-	CONSTRAINT fk_status_guid FOREIGN KEY (status_guid) REFERENCES current_status(status_guid)
-);
-
-
-CREATE TABLE commercial_data (
-	"_guid" varchar(40) NOT NULL,
-	c_date date NOT NULL,
-	period_type_guid varchar(40) NULL,
-	asset_guid varchar(40) NULL,
-	well_guid varchar(40) NULL,
-	"_location" varchar(255) NULL,
-	fluid_guid varchar(40) NULL,
-	"_value" float8 NULL,
-	unit_guid varchar(40) NULL,
-	license varchar(255) NULL,
-	info_type_guid varchar(40) NULL,
-	CONSTRAINT commercial_data_pkey PRIMARY KEY (_guid),
-	CONSTRAINT fk_asset_guid FOREIGN KEY (asset_guid) REFERENCES assets(asset_guid),
-	CONSTRAINT fk_fluid_guid FOREIGN KEY (fluid_guid) REFERENCES fluids(fluid_guid),
-	CONSTRAINT fk_info_type_guid FOREIGN KEY (info_type_guid) REFERENCES infos(info_type_guid),
-	CONSTRAINT fk_period_type_guid FOREIGN KEY (period_type_guid) REFERENCES periods(period_type_guid),
-	CONSTRAINT fk_unit_guid FOREIGN KEY (unit_guid) REFERENCES units(unit_guid),
-	CONSTRAINT fk_well_guid FOREIGN KEY (well_guid) REFERENCES wells(well_guid)
-);
-
-
-CREATE TABLE events (
-	event_guid varchar(40) NOT NULL,
-	event_type_guid varchar(40) NULL,
-	start_at timestamp NULL,
-	end_at timestamp NULL,
-	asset_guid varchar(40) NULL,
-	well_guid varchar(40) NULL,
-	duration interval NULL,
-	"isStoped" bool NULL,
-	event_description text NULL,
-	event_status text NULL,
-	reason text NULL,
-	CONSTRAINT events_pkey PRIMARY KEY (event_guid),
-	CONSTRAINT fk_asset_guid_event FOREIGN KEY (asset_guid) REFERENCES assets(asset_guid),
-	CONSTRAINT fk_event_type_guid FOREIGN KEY (event_type_guid) REFERENCES event_types(event_type_guid),
-	CONSTRAINT fk_well_guid_event FOREIGN KEY (well_guid) REFERENCES wells(well_guid)
-);
-
-
-import random
-from datetime import date, timedelta, datetime
-
-
-
-
-# if __name__ == "__main__":
-#     for item in range(start, end):
-#         print(item)
-
-
-def daterange(start_date: date, end_date: date):
-    days = int((end_date - start_date).days)
-    for n in range(days+1):
-        yield start_date + timedelta(n)
-
-
-if __name__ == "__main__":
-    start = date(2020, 1, 1)
-    end = datetime.date(datetime.now())
-    for single_date in daterange(start, end):
-        metric = random.randrange(1, 100, 1)
-
-        print(f"{single_date.strftime('%Y-%m-%d')} - {metric}") 
-
-
