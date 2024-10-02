@@ -79,3 +79,183 @@ plotly                    5.22.0
 plotly-geo                1.0.0
 plotly-resampler          0.10.0
 matplotlib                3.7.0
+
+-------------------------
+
+
+CREATE table if not exists commercial_data (
+    id SERIAL NOT NULL,
+    h_date DATE NOT NULL,
+    period_type VARCHAR(50) NOT NULL,
+    project_id INT NOT NULL,
+    value numeric(23, 12), 
+    unit_id INT,
+    hydrocarbon_id INT,
+    comment TEXT,
+    old_project_id INT,
+    old_value numeric(23, 12), 
+    old_unit_id int,
+    old_hydrocarbon_id int,
+    old_comment TEXT,
+    CONSTRAINT pk_commercial_data PRIMARY KEY (id),
+    CONSTRAINT fk_commercial_data_project_id FOREIGN KEY (project_id) REFERENCES projects(project_id),
+    CONSTRAINT fk_commercial_data_old_project_id FOREIGN KEY (old_project_id) REFERENCES projects(project_id),
+    CONSTRAINT fk_commercial_data_unit_id FOREIGN KEY (unit_id) REFERENCES units(unit_id),
+    CONSTRAINT fk_commercial_data_old_unit_id FOREIGN KEY (old_unit_id) REFERENCES units(unit_id),
+    CONSTRAINT fk_commercial_data_hydrocarbon_id FOREIGN KEY (hydrocarbon_id) REFERENCES hydrocarbons(hydrocarbon_id),
+    CONSTRAINT fk_commercial_data_old_hydrocarbon_id FOREIGN KEY (old_hydrocarbon_id) REFERENCES hydrocarbons(hydrocarbon_id)
+);
+
+
+
+CREATE table if not exists commercial_data_plan (
+    id SERIAL NOT NULL,
+    h_date DATE NOT NULL,
+    period_type VARCHAR(50) NOT NULL,
+    project_id INT NOT NULL,
+    value numeric(23, 12), 
+    unit_id INT,
+    hydrocarbon_id INT,
+    comment TEXT,
+    old_project_id INT,
+    old_value numeric(23, 12), 
+    old_unit_id int,
+    old_hydrocarbon_id int,
+    old_comment TEXT,
+    CONSTRAINT pk_commercial_data_plan PRIMARY KEY (id),
+    CONSTRAINT fk_commercial_data_plan_project_id FOREIGN KEY (project_id) REFERENCES projects(project_id),
+    CONSTRAINT fk_commercial_data_plan_old_project_id FOREIGN KEY (old_project_id) REFERENCES projects(project_id),
+    CONSTRAINT fk_commercial_data_plan_unit_id FOREIGN KEY (unit_id) REFERENCES units(unit_id),
+    CONSTRAINT fk_commercial_data_plan_old_unit_id FOREIGN KEY (old_unit_id) REFERENCES units(unit_id),
+    CONSTRAINT fk_commercial_data_plan_hydrocarbon_id FOREIGN KEY (hydrocarbon_id) REFERENCES hydrocarbons(hydrocarbon_id),
+    CONSTRAINT fk_commercial_data_plan_old_hydrocarbon_id FOREIGN KEY (old_hydrocarbon_id) REFERENCES hydrocarbons(hydrocarbon_id)
+);
+
+
+
+CREATE table if not exists commercial_data_nomination (
+    id SERIAL NOT NULL,
+    h_date DATE NOT NULL,
+    period_type VARCHAR(50) NOT NULL,
+    project_id INT NOT NULL,
+    value numeric(23, 12), 
+    unit_id INT,
+    hydrocarbon_id INT,
+    comment TEXT,
+    old_project_id INT,
+    old_value numeric(23, 12), 
+    old_unit_id int,
+    old_hydrocarbon_id int,
+    old_comment TEXT,
+    CONSTRAINT pk_commercial_data_nomination PRIMARY KEY (id),
+    CONSTRAINT fk_commercial_data_nomination_project_id FOREIGN KEY (project_id) REFERENCES projects(project_id),
+    CONSTRAINT fk_commercial_data_nomination_old_project_id FOREIGN KEY (old_project_id) REFERENCES projects(project_id),
+    CONSTRAINT fk_commercial_data_nomination_unit_id FOREIGN KEY (unit_id) REFERENCES units(unit_id),
+    CONSTRAINT fk_commercial_data_nomination_old_unit_id FOREIGN KEY (old_unit_id) REFERENCES units(unit_id),
+    CONSTRAINT fk_commercial_data_nomination_hydrocarbon_id FOREIGN KEY (hydrocarbon_id) REFERENCES hydrocarbons(hydrocarbon_id),
+    CONSTRAINT fk_commercial_data_nomination_old_hydrocarbon_id FOREIGN KEY (old_hydrocarbon_id) REFERENCES hydrocarbons(hydrocarbon_id)
+);
+
+
+
+CREATE TABLE if not exists consumption_data (
+    id SERIAL,
+    h_date DATE NOT NULL,
+    period_type VARCHAR(50),
+    burned_value numeric(23, 12),
+    fuel_value numeric(23, 12),
+    converted_value numeric(23, 12), 
+    hydrocarbon_id INT,
+    unit_id INT,
+    project_id INT,     
+    commentary text,
+    CONSTRAINT pk_consumption_data PRIMARY KEY (id),
+    CONSTRAINT fk_consumption_data_project_id FOREIGN KEY (project_id) REFERENCES projects(project_id),
+    CONSTRAINT fk_consumption_data_hydrocarbon_id FOREIGN KEY (hydrocarbon_id) REFERENCES hydrocarbons(hydrocarbon_id),
+    CONSTRAINT fk_consumption_data_unit_id FOREIGN KEY (unit_id) REFERENCES units(unit_id)
+);
+
+
+CREATE TABLE if not exists water_stats (
+    id SERIAL,
+    h_date DATE NOT NULL,
+    period_type VARCHAR(50) NOT NULL,
+    project_id INT NOT NULL,
+    injection_value numeric(23, 12),
+    util_value numeric(23, 12),
+    unit_id INT,
+    hydrocarbon_id INT,
+    commentary TEXT,
+    CONSTRAINT pk_water_stats PRIMARY KEY (id),
+    CONSTRAINT fk_water_stats_project_id FOREIGN KEY (project_id) REFERENCES projects(project_id),
+    CONSTRAINT fk_water_stats_hydrocarbon_id FOREIGN KEY (hydrocarbon_id) REFERENCES hydrocarbons(hydrocarbon_id),
+    CONSTRAINT fk_water_stats_unit_id FOREIGN KEY (unit_id) REFERENCES units(unit_id)
+);
+
+
+CREATE TABLE if not exists stock_of_wells (
+    id SERIAL,
+    h_date DATE NOT NULL,
+    period_type VARCHAR(50) NOT NULL,
+    project_id INT NOT NULL,
+    total INT,  
+    old_total INT,  
+    active INT,  
+    work INT,  
+    avg_duration INTERVAL,
+    commentary TEXT,
+    CONSTRAINT pk_stock_of_wells PRIMARY KEY (id),
+    CONSTRAINT fk_stock_of_wells_project_id FOREIGN KEY (project_id) REFERENCES projects(project_id)
+);
+
+
+CREATE TABLE if not exists pressure(
+    id SERIAL,
+    h_date DATE NOT NULL,
+    period_type VARCHAR(50) NOT NULL,
+    project_id INT NOT NULL,
+    total INT,  
+    old_total INT,  
+    active INT,  
+    work INT,  
+    avg_duration INTERVAL,
+    commentary TEXT,
+    CONSTRAINT pk_stock_of_wells PRIMARY KEY (id),
+    CONSTRAINT fk_stock_of_wells_project_id FOREIGN KEY (project_id) REFERENCES projects(project_id)
+);
+
+
+create table if not exists periods (
+	period_id serial not null,
+	period_name varchar(10) not null,
+	CONSTRAINT pk_periods PRIMARY KEY (period_id)
+);
+
+
+ALTER TABLE public.commercial_data RENAME COLUMN period_type TO period_id;
+ALTER TABLE public.commercial_data ALTER COLUMN period_id TYPE int USING period_id::int;
+ALTER TABLE public.commercial_data ADD CONSTRAINT commercial_data_periods_fk FOREIGN KEY (period_id) REFERENCES public.periods(period_id);
+
+ALTER TABLE public.commercial_data_nomination RENAME COLUMN period_type TO period_id;
+ALTER TABLE public.commercial_data_nomination ALTER COLUMN period_id TYPE int USING period_id::int;
+ALTER TABLE public.commercial_data_nomination ADD CONSTRAINT commercial_data_nomination_periods_fk FOREIGN KEY (period_id) REFERENCES public.periods(period_id);
+
+
+ALTER TABLE public.commercial_data_plan RENAME COLUMN period_type TO period_id;
+ALTER TABLE public.commercial_data_plan ALTER COLUMN period_id TYPE int USING period_id::int;
+ALTER TABLE public.commercial_data_plan ADD CONSTRAINT commercial_data_plan_periods_fk FOREIGN KEY (period_id) REFERENCES public.periods(period_id);
+
+ALTER TABLE public.consumption_data RENAME COLUMN period_type TO period_id;
+ALTER TABLE public.consumption_data ALTER COLUMN period_id TYPE int USING period_id::int;
+ALTER TABLE public.consumption_data ADD CONSTRAINT consumption_data_periods_fk FOREIGN KEY (period_id) REFERENCES public.periods(period_id);
+
+ALTER TABLE public.stock_of_wells RENAME COLUMN period_type TO period_id;
+ALTER TABLE public.stock_of_wells ALTER COLUMN period_id TYPE int USING period_id::int;
+ALTER TABLE public.stock_of_wells ADD CONSTRAINT stock_of_wells_periods_fk FOREIGN KEY (period_id) REFERENCES public.periods(period_id);
+
+
+ALTER TABLE public.water_stats RENAME COLUMN period_type TO period_id;
+ALTER TABLE public.water_stats ALTER COLUMN period_id TYPE int USING period_id::int;
+ALTER TABLE public.water_stats ADD CONSTRAINT water_stats_periods_fk FOREIGN KEY (period_id) REFERENCES public.periods(period_id);
+
+
