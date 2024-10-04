@@ -1,3 +1,18 @@
+CREATE TABLE periods (
+	period_id serial4 NOT NULL,
+	period_name varchar(10) NOT NULL,
+	CONSTRAINT pk_periods PRIMARY KEY (period_id)
+);
+
+
+CREATE TABLE units (
+	unit_id serial4 NOT NULL,
+	unit_name varchar(60) NOT NULL,
+	unit_measurement varchar(20) DEFAULT 'volume'::character varying NOT NULL,
+	CONSTRAINT units_pkey PRIMARY KEY (unit_id)
+);
+
+
 CREATE table if not exists commercial_data (
     id SERIAL NOT NULL,
     h_date DATE NOT NULL,
@@ -20,6 +35,29 @@ CREATE table if not exists commercial_data (
     CONSTRAINT fk_commercial_data_hydrocarbon_id FOREIGN KEY (hydrocarbon_id) REFERENCES hydrocarbons(hydrocarbon_id),
     CONSTRAINT fk_commercial_data_old_hydrocarbon_id FOREIGN KEY (old_hydrocarbon_id) REFERENCES hydrocarbons(hydrocarbon_id)
 );
+
+CREATE TABLE projects (
+	project_id serial4 NOT NULL,
+	project_name varchar(255) NOT NULL,
+	country_id serial4 NOT NULL,
+	CONSTRAINT projects_pkey PRIMARY KEY (project_id),
+	CONSTRAINT projects_project_name_key UNIQUE (project_name)
+);
+
+
+-- public.projects внешние включи
+
+ALTER TABLE public.projects ADD CONSTRAINT projects_country_id_fkey FOREIGN KEY (country_id) REFERENCES countries(country_id);
+
+CREATE TABLE hydrocarbons (
+	hydrocarbon_id serial4 NOT NULL,
+	hydrocarbon_name varchar(255) NULL,
+	hydrocarbon_name_en varchar(255) NULL,
+	CONSTRAINT hydrocarbons_pkey PRIMARY KEY (hydrocarbon_id)
+);
+
+
+
 
 
 
