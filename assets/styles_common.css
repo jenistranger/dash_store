@@ -128,3 +128,37 @@
 .toast_me {
     width: fit-content;
 }
+
+.filters .collapse-button {
+    margin-bottom: 0.25rem;
+    /* width: auto; */
+    width: 100%;
+}
+
+.collapse-button {
+    background-color : #0070ba;
+    border-color: #0070ba;
+}
+
+.collapse-button:hover {
+    background-color : #d3dae4;
+    border-color: #d3dae4;
+    color: #000000;
+}
+
+
+.collapse-button:focus {
+    background-color : #004271;
+    border-color: #004271;
+    color: #d1d3d4;
+    /*эта штука не работает но пусть будет как идея*/
+    outline:0 !important;
+}
+
+.collapse-button:active {
+    background-color : #004271;
+    border-color: #004271;
+    color: #d1d3d4;
+    /*эта штука не работает но пусть будет как идея*/
+    outline:0 !important;
+}
