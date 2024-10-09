@@ -22,29 +22,18 @@ app = Dash(server=server,
 
 navbar = dbc.NavbarSimple(
     children=[
-        dbc.DropdownMenu(
-            children=[
-                        dbc.DropdownMenuItem(page['name'], href=page['path']) 
-                        for page in dash.page_registry.values()
-                     ],
-            nav=True,
-            in_navbar=True,
-            label="Меню"
-        )
+        dbc.NavItem(dbc.NavLink("Главная", href="/")),
+        dbc.NavItem(dbc.NavLink("О приложении", href="/about")),
+        # dbc.DropdownMenu(
+        #     children=[
+        #                 dbc.DropdownMenuItem(page['name'], href=page['path']) 
+        #                 for page in dash.page_registry.values()
+        #              ],
+        #     nav=True,
+        #     in_navbar=True,
+        #     label="Меню"
+        # )
     ],
-    # children=[
-    #     dbc.NavItem(dbc.NavLink("Page 1", href="#")),
-    #     dbc.DropdownMenu(
-    #         children=[
-    #             dbc.DropdownMenuItem("More pages", header=True),
-    #             dbc.DropdownMenuItem("Page 2", href="#"),
-    #             dbc.DropdownMenuItem("Page 3", href="#"),
-    #         ],
-    #         nav=True,
-    #         in_navbar=True,
-    #         label="More",
-    #     ),
-    # ],
     brand="Приложение",
     brand_href="/",
 )
@@ -58,15 +47,13 @@ main_content = html.Div(dash.page_container,className="main_content")
 
 app.layout = html.Div([
     upper_sidebar,
-    navbar,
+    # navbar,
     main_content,
     bottom_sidebar
 ])
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=53996, debug=True)
-
-
 
 
 
