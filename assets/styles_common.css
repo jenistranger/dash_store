@@ -125,8 +125,18 @@
 
 
 /*Мои*/
-.toast_me {
-    width: fit-content;
+/* .toast_me {
+    width: auto;
+} */
+
+.toast-body {
+    padding-top: 0.25rem;
+    padding-right: 1rem;
+    padding-left: 1rem;
+}
+
+.toast-header {
+    color: #706f6f;
 }
 
 .filters .collapse-button {
@@ -161,4 +171,16 @@
     color: #d1d3d4;
     /*эта штука не работает но пусть будет как идея*/
     outline:0 !important;
+}
+
+.DateRangePickerInput_arrow_svg {
+    vertical-align: middle;
+    fill: #484848;
+    height: 15px;
+    width: 15px;
+}
+
+.col-12 {
+    flex: 0 0 auto;
+    width: 98%;
 }
