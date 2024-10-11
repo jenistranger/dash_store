@@ -1,4 +1,3 @@
-
 import dash
 from dash import Dash, dcc, html, Input, Output, callback
 import dash_bootstrap_components as dbc
@@ -23,6 +22,7 @@ app = Dash(server=server,
 navbar = dbc.NavbarSimple(
     children=[
         dbc.NavItem(dbc.NavLink("Главная", href="/")),
+        dbc.NavItem(dbc.NavLink("Настройки", href="/settings")),
         dbc.NavItem(dbc.NavLink("О приложении", href="/about")),
         # dbc.DropdownMenu(
         #     children=[
@@ -37,7 +37,7 @@ navbar = dbc.NavbarSimple(
     brand="Приложение",
     brand_href="/",
 )
-upper_sidebar = html.Div([html.H4("Навигация"), navbar],
+upper_sidebar = html.Div([html.H4('Дашборд "Производство"'), navbar],
                          className="upper_sidebar")
 
 bottom_sidebar = html.Div(children=[html.H4("Версия 0.1")
@@ -54,6 +54,5 @@ app.layout = html.Div([
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=53996, debug=True)
-
 
 
