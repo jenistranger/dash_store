@@ -62,7 +62,12 @@ def update_output(start_date, end_date):
     return None
 
 
+
+from xlsx_parser import get_actual_data, create_fig_with_wells, create_fig_plus, get_gas_stats_monthly, from_period
+
+
 @callback(
+    # Output("third_chart", "figure"),
     Output('output-dateinfo-picker', 'children'),
     Input('date-picker-range', 'start_date'),
     Input('date-picker-range', 'end_date')
@@ -75,16 +80,17 @@ def update_output(start_date, end_date):
         start = datetime.strptime(start_date, "%Y-%m-%d").date()
         end = datetime.strptime(end_date, "%Y-%m-%d").date()
         delta = (end - start).days
-        
-        
 
-        if delta <= 31:
-            return f"По дням - {delta}"
-        elif delta <= 365:
-            return f"По месяцам - {delta}"
-        else:
-            return f"По годам - {delta}"
-    return ""
+#ok, тут буду рисоваться график
+
+        # if delta <= 35:
+        #     return f"По дням - {delta}"
+        # elif delta <= 365:
+        #     return f"По месяцам - {delta}"
+        # else:
+        #     return f"По годам - {delta}"
+    # return ""
+    return {}
 
 
 
@@ -94,7 +100,6 @@ def update_output(start_date, end_date):
 #кроме водопада!
 #пока без оптимизации
 
-from xlsx_parser import get_actual_data, create_fig_with_wells, create_fig_plus, get_gas_stats_monthly, from_period
 
 @callback(
     [
@@ -108,6 +113,8 @@ from xlsx_parser import get_actual_data, create_fig_with_wells, create_fig_plus,
         Output("year_change", "style")       # для изменения цвета текста
     ],
     Input("period-radioitems", "value"),
+    # Input("date-picker-range", "start_date"),
+    # Input("date-picker-range", "end_date")
 )
 def update_output(value):
     if value == 'month':
@@ -139,6 +146,7 @@ def update_output(value):
             year_change_text,
             year_change_style
         )
+    # elif value == 'period':
 
     # Если не выбран месяц, возвращаем пустые данные
     return {}, {}, None, "", "", {}, "", {}
@@ -280,23 +288,27 @@ work_stats_period = dbc.Toast(
     style={"width":"16rem"}
 )
 
+from devgenx import generate_wells_month
+
+wells_genx = generate_wells_month(),
+
 wells_stats_period = dbc.Toast(
     [
-        html.H5("75%", className="mb-0"),
+        html.H5(f"{wells_genx[0]['percent_found']}%", className="mb-0"),
         html.Div([
             dbc.Row(
             [
                 dbc.Col([
                     html.P("Общий", className="mb-0"),
-                    html.P("15", className="mb-0")
+                    html.P(f"{wells_genx[0]['total']}", className="mb-0")
                 ],style={"white-space" : "nowrap"}, className="m-0", width="auto", align="center"), #
                 dbc.Col([
                     html.P("Действующий", className="mb-0"),
-                    html.P("13", className="mb-0")
+                    html.P(f"{wells_genx[0]['current']}", className="mb-0")
                 ],style={"white-space" : "nowrap"}, className="m-0", width="auto", align="center"),
                 dbc.Col([
                     html.P("В работе", className="mb-0"),
-                    html.P("9", className="mb-0") #style={"padding-bottom" : "0"})
+                    html.P(f"{wells_genx[0]['active']}", className="mb-0")
                 ], style={"white-space" : "nowrap"}, className="m-0 pr-0", width="auto", align="center"),
             ],
                 justify="center",
@@ -506,9 +518,6 @@ layout = html.Div(
         html.Div(id="output-dateinfo-picker") 
     ]
 )
-
-
-
 
 
 
