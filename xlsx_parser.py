@@ -115,8 +115,8 @@ def create_fig_with_wells(month, year, title):
     fig.add_trace(go.Scatter(x=filtered_df['day'], y=filtered_df['gas_commercial_value_m3']/1000000, mode='lines', name='Факт товарный', yaxis='y2', line=dict(color="royalblue")))
     fig.add_trace(go.Scatter(x=filtered_df['day'], y=filtered_df['gas_commercial_plan_daily_m3']/1000000, mode='lines', name='План суточный', yaxis='y2', line=dict(color="red", dash="dot", width=4)))
     fig.add_trace(go.Scatter(x=filtered_df['day'], y=filtered_df['gas_commercial_plan_nomintaion_m3']/1000000, mode='lines', name='План номинация', yaxis='y2', line=dict(color="#6f32a8")))
-    fig.add_trace(go.Bar(x=filtered_df['day'], y=filtered_df['found_total'], name='Фонд скважин', opacity=0.7, yaxis='y1', marker_color='#40a7ff', width=0.65))
-    fig.add_trace(go.Bar(x=filtered_df['day'], y=filtered_df['found_daily_work'], name='В добыче', opacity=0.5, yaxis='y1', marker_color='#797979', width=0.65))
+    fig.add_trace(go.Bar(x=filtered_df['day'], y=filtered_df['found_total'], name='Фонд скважин', opacity=0.7, yaxis='y1', marker_color='#40a7ff'))
+    fig.add_trace(go.Bar(x=filtered_df['day'], y=filtered_df['found_daily_work'], name='В добыче', opacity=0.5, yaxis='y1', marker_color='#797979'))
 
     # Добавление аннотации с средним отклонением
     fig.add_annotation(
@@ -156,7 +156,48 @@ def create_fig_with_wells(month, year, title):
 
     return fig
 
+
+
+
+
+
+
+
+def create_fig_with_wells_periods(start_date, end_date, period):
+    df = pd.read_csv('temp_files\\all_data_from_table.csv')
+
+    df.loc[:, 'date'] = pd.to_datetime(df['date'])
     
+    if period == 'month':
+        pass
+
+
+
+
+    elif period == 'period':
+        pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -459,3 +500,4 @@ def from_period(start, end):
     end = pd.to_datetime(end)
     period_df = df.loc[df['date'].between(start, end, inclusive=True)]
     print(period_df)
+
